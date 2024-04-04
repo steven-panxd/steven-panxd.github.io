@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category and Items Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5" id="app">
+        <h2>Budget Planner</h2>
+
+        <a id="exportDataDownload" style="display:none"></a>
+        <button class="btn btn-secondary" id="exportData">Export Data</button>
+        <button class="btn btn-secondary" id="importData">Import Data</button>
+
+        <div class="row">
+          <!-- Category Form -->
+          <form id="categoryForm" class="col-md-6">
+              <div class="mb-3">
+                  <label for="categoryName" class="form-label">Category Name</label>
+                  <input type="text" class="form-control" id="categoryName" required>
+              </div>
+              <div class="mb-3">
+                  <label for="categoryWeight" class="form-label">Category Weight (1-100)</label>
+                  <input type="number" class="form-control" id="categoryWeight" required min="1" max="100">
+              </div>
+              <button type="submit" class="btn btn-primary">Add Category</button>
+          </form>
+          <!-- Item Form -->
+          <form id="itemForm" class="col-md-6">
+              <div class="mb-3">
+                  <label for="itemCategory" class="form-label">Category</label>
+                  <select class="form-select" id="itemCategory" required></select>
+              </div>
+              <div class="mb-3">
+                  <label for="itemName" class="form-label">Item Name</label>
+                  <input type="text" class="form-control" id="itemName" required>
+              </div>
+              <div class="mb-3">
+                  <label for="itemCost" class="form-label">Item Cost</label>
+                  <input type="number" class="form-control" id="itemCost" step="0.01" required min="1">
+              </div>
+              <button type="submit" class="btn btn-success">Add Item</button>
+          </form>
+        </div>
+
+        <!-- Display Categories and Items -->
+        <h3>Category and Items</h3>
+        <div id="categoriesList"></div>
+
+
+        <form id="planForm" class="mb-3">
+          <h3>Budget</h3>
+          <div class="mb-3">
+              <label for="budget" class="form-label">Budget</label>
+              <input type="number" class="form-control" id="budget" step="0.01" min="1" required>
+          </div>
+          <button type="submit" class="btn btn-danger">I want my plan!</button>
+        </form>
+
+        <!-- display plans -->
+        <h3>Plans</h3>
+        <div id="planList"></div>
+    </div>
+
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="app.js"></script>
+</body>
+</html>
