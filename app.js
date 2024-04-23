@@ -105,8 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const categoryId = itemCategorySelect.value;
         const name = document.getElementById('itemName').value;
         const cost = parseFloat(document.getElementById('itemCost').value).toFixed(2);
-        if (!isNaN(cost) && cost > 0) {
-            categories.get(categoryId).items.push({name, cost});
+        const utility = parseInt(document.getElementById('itemUtility').value);
+        if (!isNaN(cost) && cost > 0 && utility > 0 && utility <= 10) {
+            categories.get(categoryId).items.push({name, cost, utility});
             renderCategories();
             itemForm.reset();
         } else {
@@ -182,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let curItemIndex = 1; curItemIndex <= items.length; curItemIndex++) {
             const item = items[curItemIndex - 1];
             const curItemCost = parseInt(item.cost);
-            const curItemUtility = parseInt(items.length - curItemIndex + 1);
+            const curItemUtility = parseInt(item.utility);
 
             for (let curBudget = 1; curBudget <= budget; curBudget++) {
                 if (curItemCost <= curBudget && ((dpMemo[curItemIndex - 1][curBudget - curItemCost][1]) + curItemUtility > dpMemo[curItemIndex - 1][curBudget][1])) {
@@ -219,10 +220,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <ul class="list-group">
                     ${catItems.map((item, index) => `
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            Name: ${item.name} - $${item.cost}
+                            Name: ${item.name} - $${item.cost} - Utility: ${item.utility}
                             <span>
-                                <button data-id="${index}" class="btn btn btn-sm up-item">↑</button>
-                                <button data-id="${index}" class="btn btn btn-sm down-item">↓</button>
                                 <button data-id="${index}" class="btn btn-secondary btn-sm edit-item">Edit</button>
                                 <button data-id="${index}" class="btn btn-danger btn-sm delete-item">Delete</button>
                             </span>
@@ -286,46 +285,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (itemToEdit) {
                     const newName = prompt("Enter new name for the item", itemToEdit.name);
                     const newCost = prompt("Enter new cost for the item", itemToEdit.cost);
-                    if (newName && !isNaN(newCost)) {
+                    const newUtility = prompt("Enter new utility for the item", itemToEdit.utility)
+                    if (newName && !isNaN(newCost) && newCost > 0 && !isNaN(newUtility) && newUtility > 0 && newUtility <= 10) {
                         itemToEdit.name = newName;
                         itemToEdit.cost = parseFloat(newCost).toFixed(2);
+                        itemToEdit.utility = parseInt(newUtility);
                         renderCategories();
                     }
                 }
-            });
-        });
-
-        // up item
-        document.querySelectorAll('.up-item').forEach(button => {
-            button.addEventListener('click', function() {
-                const categoryId = this.parentElement.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.getAttribute("data-id");
-                const itemIndex = parseInt(this.getAttribute('data-id'));
-                if (itemIndex <= 0) {
-                    return;
-                }
-
-                const temp = categories.get(categoryId).items[itemIndex];
-                categories.get(categoryId).items[itemIndex] = categories.get(categoryId).items[itemIndex - 1];
-                categories.get(categoryId).items[itemIndex - 1] = temp;
-                renderCategories();
-            });
-        });
-
-        // down item
-        document.querySelectorAll('.down-item').forEach(button => {
-            button.addEventListener('click', function() {
-                const categoryId = this.parentElement.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.getAttribute("data-id");
-                const itemIndex = parseInt(this.getAttribute('data-id'));
-                
-                if (itemIndex >= (categories.get(categoryId).items.length - 1)) {
-                    return;
-                }
-
-                const temp = categories.get(categoryId).items[itemIndex];
-                categories.get(categoryId).items[itemIndex] = categories.get(categoryId).items[itemIndex + 1];
-                categories.get(categoryId).items[itemIndex + 1] = temp;
-                console.log(categories.get(categoryId).items);
-                renderCategories();
             });
         });
     }
