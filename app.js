@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         items.map(item => {
             item.cost = Math.floor(item.cost * 100);
         })
-
+        
         //[currentActualCost, currentActualUtility, currentItems]
         const dpMemo = Array.from({length: items.length + 1}, () => Array.from({length: budget + 1}, () => [0, 0, []])) 
 
@@ -186,10 +186,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const curItemUtility = parseInt(item.utility);
 
             for (let curBudget = 1; curBudget <= budget; curBudget++) {
-                if (curItemCost <= curBudget && ((dpMemo[curItemIndex - 1][curBudget - curItemCost][1]) + curItemUtility > dpMemo[curItemIndex - 1][curBudget][1])) {
-                    dpMemo[curItemIndex][curBudget] = [dpMemo[curItemIndex - 1][curBudget - curItemCost][0] + curItemCost, dpMemo[curItemIndex - 1][curBudget - curItemCost][1] + curItemUtility, dpMemo[curItemIndex - 1][curBudget - curItemCost][2].concat([item,])];
-                } else {
-                    dpMemo[curItemIndex][curBudget] = dpMemo[curItemIndex - 1][curBudget];
+                // not taking current item
+                dpMemo[curItemIndex][curBudget] = dpMemo[curItemIndex - 1][curBudget];
+
+                // try to take current item
+                if (curBudget >= curItemCost) {
+                    const newUtility = (dpMemo[curItemIndex - 1][curBudget - curItemCost][1]) + curItemUtility;
+                    const newCost = (dpMemo[curItemIndex - 1][curBudget - curItemCost][0]) + curItemCost;
+                    
+                    if ((newUtility > dpMemo[curItemIndex][curBudget][1]) || (newUtility == dpMemo[curItemIndex][curBudget][1] && newCost < dpMemo[curItemIndex][curBudget][0])) {
+                        dpMemo[curItemIndex][curBudget] = [newCost, newUtility, dpMemo[curItemIndex - 1][curBudget - curItemCost][2].concat([item,])];
+                    }
                 }
             }
         }
